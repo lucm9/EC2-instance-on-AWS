@@ -3,5 +3,5 @@ output "vpc_name" {
 }
 
 output "intance_id" {
-  value = aws_instance.luc_instance.id
+  value = aws_instance.luc_instance.public_ip
 }

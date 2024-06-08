@@ -37,8 +37,17 @@ variable "key_pair" {
 
 }
 
+variable "map_public_ip_on_launch" {
+  type = bool
+}
+
 variable "tags" {
   type        = map(string)
   description = "We will specify our tags here"
+
+}
+
+variable "associate_public_ip_address" {
+    type = bool
 
 }

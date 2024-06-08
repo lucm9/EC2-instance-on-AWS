@@ -13,3 +13,7 @@ availability_zone = ["us-east-2a", "us-east-2b"]
 key_pair          = "terraform-key"
 
 environment = "production"
+
+map_public_ip_on_launch = true
+
+associate_public_ip_address = true
