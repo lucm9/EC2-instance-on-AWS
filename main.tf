@@ -21,11 +21,15 @@ resource "aws_internet_gateway" "aws_igw" {
   )
 }
 
-resource "aws_subnet" "pub_sub" {
-  count             = length(var.pub_sub)
-  vpc_id            = aws_vpc.sat_vpc.id
-  availability_zone = element(var.availability_zone, count.index)
+# data "aws_availability_zones" "available" {
+#   state = "available"
+# }
 
+resource "aws_subnet" "pub_sub" {
+  count             = length(var.availability_zone)
+  vpc_id            = aws_vpc.sat_vpc.id
+  availability_zone = var.availability_zone[count.index]
+  cidr_block        = var.pub_sub[count.index]
   tags = merge(var.tags,
     {
       name = "format(%-Public-Subnet-%, var.environment, count.index)"
@@ -36,10 +40,11 @@ resource "aws_subnet" "pub_sub" {
 }
 
 resource "aws_subnet" "priv_sub" {
-  count             = length(var.priv_sub)
+  count             = length(var.availability_zone)
   vpc_id            = aws_vpc.sat_vpc.id
-  availability_zone = element(var.availability_zone, count.index)
-
+  availability_zone = var.availability_zone[count.index]
+  cidr_block        = var.priv_sub[count.index]
+  
   tags = merge(var.tags,
     {
       name = "format(%-Private-Subnet-%, var.environment, count.index)"
@@ -116,7 +121,7 @@ resource "aws_security_group" "ec2_sg" {
   ingress {
     from_port   = 443
     to_port     = 443
-    protocol    = "https"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
