@@ -49,5 +49,12 @@ variable "tags" {
 
 variable "associate_public_ip_address" {
     type = bool
+    
 
+}
+
+variable "instance_type" {
+  type = string
+  description = "This will be the instance type we use"
+  
 }

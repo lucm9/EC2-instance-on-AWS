@@ -5,7 +5,7 @@ resource "aws_vpc" "sat_vpc" {
     var.tags,
 
     {
-      Name = "format(%-VPC-%, var.name, var.environment)"
+      Name = format("%-VPC-%", var.vpc_name, var.environment)
     }
   )
 }
@@ -16,7 +16,7 @@ resource "aws_internet_gateway" "aws_igw" {
   tags = merge(
     var.tags,
     {
-      name = "format(IGW-%, var.environment)"
+      name = format("IGW-%", var.environment)
     }
   )
 }
@@ -33,7 +33,7 @@ resource "aws_subnet" "pub_sub" {
   map_public_ip_on_launch = var.map_public_ip_on_launch
   tags = merge(var.tags,
     {
-      name = "format(%-Public-Subnet-%, var.environment, count.index)"
+      name = format("%-Public-Subnet-%", var.environment, count.index)
 
     }
   )
@@ -48,7 +48,7 @@ resource "aws_subnet" "priv_sub" {
 
   tags = merge(var.tags,
     {
-      name = "format(%-Private-Subnet-%, var.environment, count.index)"
+      name = format("%-Private-Subnet-%", var.environment, count.index)
     }
   )
 }
@@ -65,7 +65,7 @@ resource "aws_route_table" "public_rt" {
   tags = merge(var.tags,
 
     {
-      name = "format(%-public_rt, var.environment)"
+      name = format("%-public_rt", var.environment)
     }
 
   )
@@ -78,7 +78,7 @@ resource "aws_route_table" "Private_rt" {
   tags = merge(var.tags,
 
     {
-      name = "format(%-private_rt, var.environment)"
+      name = format("%-private_rt", var.environment)
     }
 
   )
@@ -135,7 +135,7 @@ resource "aws_security_group" "ec2_sg" {
 
   tags = merge(var.tags,
     {
-      name = "format(%-Ec2SG, var.environment)"
+      name = format("%-Ec2SG", var.environment)
     }
   )
 
