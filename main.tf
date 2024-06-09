@@ -5,7 +5,7 @@ resource "aws_vpc" "sat_vpc" {
     var.tags,
 
     {
-      Name = format("%s-vpc-%s!", var.vpc_name, var.environment)
+      Name = format("%s-vpc-%s", var.vpc_name, var.environment)
     }
   )
 }
@@ -33,7 +33,7 @@ resource "aws_subnet" "pub_sub" {
   map_public_ip_on_launch = var.map_public_ip_on_launch
   tags = merge(var.tags,
     {
-      name = format("%s-Public-Subnet-%s!", var.environment, count.index)
+      name = format("%s-Public-Subnet-%s", var.environment, count.index)
 
     }
   )
@@ -48,7 +48,7 @@ resource "aws_subnet" "priv_sub" {
 
   tags = merge(var.tags,
     {
-      name = format("%s-Private-Subnet-%s!", var.environment, count.index)
+      name = format("%s-Private-Subnet-%s", var.environment, count.index)
     }
   )
 }
