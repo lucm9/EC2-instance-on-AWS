@@ -5,7 +5,7 @@ resource "aws_vpc" "sat_vpc" {
     var.tags,
 
     {
-      Name = format("%-VPC-%", var.vpc_name, var.environment)
+      Name = format("%s-vpc-%s!", var.vpc_name, var.environment)
     }
   )
 }
@@ -16,7 +16,7 @@ resource "aws_internet_gateway" "aws_igw" {
   tags = merge(
     var.tags,
     {
-      name = format("IGW-%", var.environment)
+      name = format("igw-%s", var.environment)
     }
   )
 }
@@ -33,7 +33,7 @@ resource "aws_subnet" "pub_sub" {
   map_public_ip_on_launch = var.map_public_ip_on_launch
   tags = merge(var.tags,
     {
-      name = format("%-Public-Subnet-%", var.environment, count.index)
+      name = format("%s-Public-Subnet-%s!", var.environment, count.index)
 
     }
   )
@@ -48,7 +48,7 @@ resource "aws_subnet" "priv_sub" {
 
   tags = merge(var.tags,
     {
-      name = format("%-Private-Subnet-%", var.environment, count.index)
+      name = format("%s-Private-Subnet-%s!", var.environment, count.index)
     }
   )
 }
@@ -65,7 +65,7 @@ resource "aws_route_table" "public_rt" {
   tags = merge(var.tags,
 
     {
-      name = format("%-public_rt", var.environment)
+      name = format("%s-public_rt", var.environment)
     }
 
   )
@@ -78,7 +78,7 @@ resource "aws_route_table" "Private_rt" {
   tags = merge(var.tags,
 
     {
-      name = format("%-private_rt", var.environment)
+      name = format("%s-private_rt", var.environment)
     }
 
   )
@@ -130,12 +130,12 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["71.34.21.44/32"]
   }
 
   tags = merge(var.tags,
     {
-      name = format("%-Ec2SG", var.environment)
+      name = format("%s-Ec2SG", var.environment)
     }
   )
 
@@ -166,9 +166,15 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "luc_instance" {
   ami                         = data.aws_ami.ubuntu.id
-  instance_type               = "t2.micro"
+  instance_type               = var.instance_type
   subnet_id                   = aws_subnet.pub_sub[0].id
   key_name                    = var.key_pair
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = var.associate_public_ip_address
+
+  tags = merge(var.tags,
+  {
+    name = format("%s-ec2-instance", var.environment)
+  }
+  )
 }
