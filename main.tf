@@ -16,7 +16,7 @@ resource "aws_internet_gateway" "aws_igw" {
   tags = merge(
     var.tags,
     {
-      name = format("igw-%s", var.environment)
+      Name = format("igw-%s", var.environment)
     }
   )
 }
@@ -33,7 +33,7 @@ resource "aws_subnet" "pub_sub" {
   map_public_ip_on_launch = var.map_public_ip_on_launch
   tags = merge(var.tags,
     {
-      name = format("%s-Public-Subnet-%s", var.environment, count.index)
+      Name = format("%s-Public-Subnet-%s", var.environment, count.index)
 
     }
   )
@@ -48,7 +48,7 @@ resource "aws_subnet" "priv_sub" {
 
   tags = merge(var.tags,
     {
-      name = format("%s-Private-Subnet-%s", var.environment, count.index)
+      Name = format("%s-Private-Subnet-%s", var.environment, count.index)
     }
   )
 }
@@ -65,7 +65,7 @@ resource "aws_route_table" "public_rt" {
   tags = merge(var.tags,
 
     {
-      name = format("%s-public_rt", var.environment)
+      Name = format("%s-public_rt", var.environment)
     }
 
   )
@@ -78,7 +78,7 @@ resource "aws_route_table" "Private_rt" {
   tags = merge(var.tags,
 
     {
-      name = format("%s-private_rt", var.environment)
+      Name = format("%s-private_rt", var.environment)
     }
 
   )
@@ -108,7 +108,7 @@ resource "aws_security_group" "ec2_sg" {
     to_port          = 0
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
+    # ipv6_cidr_blocks = ["::/0"]
   }
 
 
@@ -130,12 +130,12 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["71.34.21.44/32"]
+    cidr_blocks = [var.my_ip]
   }
 
   tags = merge(var.tags,
     {
-      name = format("%s-Ec2SG", var.environment)
+      Name = format("%s-Ec2SG", var.environment)
     }
   )
 
@@ -171,10 +171,11 @@ resource "aws_instance" "luc_instance" {
   key_name                    = var.key_pair
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = var.associate_public_ip_address
+  
 
   tags = merge(var.tags,
   {
-    name = format("%s-ec2-instance", var.environment)
+    Name = format("%s-instance-%s", var.ec2_name, var.environment)
   }
   )
 }

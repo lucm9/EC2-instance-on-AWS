@@ -49,12 +49,19 @@ variable "tags" {
 
 variable "associate_public_ip_address" {
     type = bool
-    
+}
 
+variable "my_ip" {
+  type = string
+  description = "My ip for the security group"
 }
 
 variable "instance_type" {
   type = string
   description = "This will be the instance type we use"
+}
+
+variable "ec2_name" {
+  type = string
   
 }
